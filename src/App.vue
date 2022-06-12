@@ -539,6 +539,42 @@ Just as we can wrap around built in element;
 
 -->
 
+<!-- 9 . Using Transition Events
+======================================
+
+-Vue also give us events that are emitted by <transition></transition> component during a transition
+
+-We can use the example of this by adding @before-enter="beforeEnter" on the toggle paragraph example which fires beforeEnter()
+
+-Here we can run code which will be executed when the element which is wrapped i.e paragraph in this case is about to enter .i.e When the enter animation is about to start
+
+-Right at the beginning when the element is added and the animation starts
+
+-Now if remove the paragraph we don't see beforeEnter.. called again because it is only firing when the enter animation is taking place
+
+-Of course we can also listen to the leaving with @before-leave="" just as the same case we have @before-enter="beforeEnter"
+
+  <div class="container">
+    <transition name="para" @before-enter="beforeEnter" @before-leave="beforeLeave">
+      <p v-if="isParaVisible"> Some text to toggle</p>
+    </transition>
+    <button @click="toggleParagraph">{{ isParaVisible ? 'Hide' : 'Show' }} Paragraph</button>
+  </div>
+
+-@before-leave is emitted before the element is leaving the DOM
+
+-And we also get an element i.e el for both beforeEnter(el) and beforeLeave(el) where the el is the paragraph that is entering and leaving the DOM
+
+-We also have @enter event which is equivalent to .v-enter-active which happens after the @before-enter="beforeEnter" has been trigerred
+
+-We also have @after-enter="afterEnter"  which fires after the animation is done - Done after the duration the animation takes is completed
+
+-We also have @leave="leave" - which fires beforeLeave() is completed
+
+-Then we have @after-leave="afterLeave" which fires after the animation/transition duration is completed and the the element is detached from the DOM
+
+-->
+
 
 
 <template>
@@ -548,7 +584,13 @@ Just as we can wrap around built in element;
   </div>
 
   <div class="container">
-    <transition>
+    <transition name="para" 
+    @before-enter="beforeEnter" 
+    @enter="enter" 
+    @afterEnter="afterEnter" 
+    @before-leave="beforeLeave"
+    @leave="leave"
+    @after-leave="afterLeave">
       <p v-if="isParaVisible"> Some text to toggle</p>
     </transition>
     <button @click="toggleParagraph">{{ isParaVisible ? 'Hide' : 'Show' }} Paragraph</button>
@@ -586,6 +628,33 @@ export default {
 
 
   methods: {
+
+    beforeEnter(el){
+      console.log('beforeEnter() called ...');
+      console.log(el);
+    },
+    enter(el){
+      console.log('Enter() called ...');
+      console.log(el);
+    },
+
+    afterEnter(el){
+      console.log('afterEnter() called ...');
+      console.log(el);
+    },
+
+    beforeLeave(el){
+      console.log('beforeLeave() called ...');
+      console.log(el);
+    },
+    leave(el){
+      console.log('leave() called ...');
+      console.log(el);
+    },
+    afterLeave(el){
+      console.log('afterLeave() called ...');
+      console.log(el);
+    },
 
     showUsers(){
       this.usersAreVisible = true
@@ -662,33 +731,33 @@ button:active {
 
 /* <transition></transition>  special utility classes added by Vue when the elemnt is appearing/rendered to the DOM*/
 
-    .v-enter-from {
+    .para-enter-from {
       opacity: 0;
       transform: translateY(-30px);
     }
 
-    .v-enter-active {
+    .para-enter-active {
       transition : all 0.3s ease-out;
     }
 
-    .v-enter-to {
+    .para-enter-to {
       opacity : 1;
       transform: translateY(0);
     }
 
    /* <transition></transition>  special utility classes added by Vue when the elemnt is removed/detached from the DOM*/
 
-     .v-leave-from {
+     .para-leave-from {
        opacity: 1;
        transform: translateY(0);
         }
 
-     .v-leave-active {
-        transition : all 0.3s ease-in;
+     .para-leave-active {
+        transition : all 3s ease-in;
       
     }
 
-      .v-leave-to {
+      .para-leave-to {
        opacity: 0;
        transform: translateY(-30px);
      }
