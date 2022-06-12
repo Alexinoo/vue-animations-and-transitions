@@ -470,6 +470,76 @@ Just as we can wrap around built in element;
 -->
 
 
+<!-- 9 . Transitioning Between Multiple Elements - MORE THAN ONE CHILD ELEMENTS
+======================================
+
+-The are exceptional cases where we can have transitioning with multiple child elemnts
+
+-Let's add  a container with 2 buttons for showing / hiding users below Toggle paragraph
+
+  <div class="container">
+    <button @click="showUsers" v-if="!usersAreVisible">Show Users</button>
+    <button @click="hideUsers" v-if="usersAreVisible">Hide Users</button>
+  </div>
+
+-But here we will animate the button itself
+
+-If we want a transition we can wrap this 2 buttons with transition cmpnt but ONLY IF ONLY ONE OF THEM WILL BE SHOWN AT AT A TIME;
+
+<transition>
+  <div class="container">
+    <button @click="showUsers" v-if="!usersAreVisible">Show Users</button>
+    <button @click="hideUsers" v-if="usersAreVisible">Hide Users</button>
+  </div>
+  </transition>
+
+-We can then give our transition a custom name that Vue will use to add the special tility classes an use them in conjuction but have a different active state since we want to use a different ease-function
+
+     .fade-button-enter-from ,
+     .fade-button-leave-to {
+      opacity : 0;      
+     }
+
+     .fade-button-enter-active {
+        transition : opacity 0.3s ease-out;
+     }
+
+     .fade-button-leave-active {
+        transition : opacity 0.3s ease-in;
+     }
+
+     .fade-button-enter-to ,
+     .fade-button-leave-from{
+
+        opacity: 1;
+     }
+
+-But we get an error saying that <Transition /> expects only one direct child element because Vue is not able to understand the v-if and hence we need to use v-else instead for the 2nd button
+
+  <div class="container">
+    <button @click="showUsers" v-if="!usersAreVisible">Show Users</button>
+    <button @click="hideUsers" v-else>Hide Users</button>
+  </div>
+
+-This works because with v-else it's very clear ; There is a guarantee that only one button will be rendered and never have BOTH ON THE SCREEN AT THE SAME TIME
+
+-But this is ugly because during the transition 2 buttons jump on the screen but certainly not what we want
+
+-Instead one button shd fade-out then the other fade-in which is something we can control
+
+-We can add mode="in-out" property to the <transition></transition> and can take two values
+    in-out
+    out-in
+
+-But still we get similar behavior as before if we use "in-out"
+
+-But if we use "out-in" THIS WORKS..
+
+-So this allows which button shd be animated first instead of both of them animated at the same time like we earlier saw before with -in out and v-if and v-else
+
+-->
+
+
 
 <template>
   <div class="container">
@@ -484,11 +554,18 @@ Just as we can wrap around built in element;
     <button @click="toggleParagraph">{{ isParaVisible ? 'Hide' : 'Show' }} Paragraph</button>
   </div>
 
+  <div class="container">
+    <transition name="fade-button" mode="out-in">
+      <button @click="showUsers" v-if="!usersAreVisible">Show Users</button>
+      <button @click="hideUsers" v-else>Hide Users</button>
+    </transition>
+  </div>
 
-    <base-modal @close="hideDialog" :open="dialogIsVisible">
-      <p>This is a test dialog!</p>
-      <button @click="hideDialog">Close it!</button>
-    </base-modal>
+
+  <base-modal @close="hideDialog" :open="dialogIsVisible">
+    <p>This is a test dialog!</p>
+    <button @click="hideDialog">Close it!</button>
+  </base-modal>
 
   <div class="container">
     <button @click="showDialog">Show Dialog</button>
@@ -503,11 +580,19 @@ export default {
       animatedBlock : false,
       dialogIsVisible: false,
       isParaVisible : false,
+      usersAreVisible : false,
        };
   },
 
 
   methods: {
+
+    showUsers(){
+      this.usersAreVisible = true
+    },
+    hideUsers(){
+      this.usersAreVisible = false
+    },
 
     animateBlock(){
       this.animatedBlock = true;
@@ -606,6 +691,25 @@ button:active {
       .v-leave-to {
        opacity: 0;
        transform: translateY(-30px);
+     }
+
+     .fade-button-enter-from ,
+     .fade-button-leave-to {
+      opacity : 0;      
+     }
+
+     .fade-button-enter-active {
+        transition : opacity 0.3s ease-out;
+     }
+
+     .fade-button-leave-active {
+        transition : opacity 0.3s ease-in;
+     }
+
+     .fade-button-enter-to ,
+     .fade-button-leave-from{
+
+        opacity: 1;
      }
 
 
