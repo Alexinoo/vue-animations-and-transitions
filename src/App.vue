@@ -575,6 +575,23 @@ Just as we can wrap around built in element;
 
 -->
 
+<!-- 9 . Disabling CSS Transitions
+======================================
+
+-We can bind :css property to <transition></transition> component and set it to false
+
+e.g. 
+      <transition :css="false">
+      </transition>
+
+-And basically what we are telling Vue here is that we are not going to use the special CSS classes for tranisitions or animation
+
+-And therefore Vue will not look further for these css classes and skips the analysis of searching the css classes and the duration af any animation in these classes which certainly improves the perfomance a little bit
+
+-Hence , you can add it if let's say for example you want to use JavaScript or a 3rd party library for animation
+
+-->
+
 
 
 <template>
