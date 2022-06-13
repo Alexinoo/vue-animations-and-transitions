@@ -40,10 +40,7 @@
 
         -->
 
-
-
-
- <!-- 2. Understanding CSS Animations
+<!-- 2. Understanding CSS Animations
 ======================================
 
 -We use  @keyframes nameOfTheAnimation/identifier {}
@@ -97,10 +94,7 @@ N/B ; By default CSS will move the animated element to its initial position if f
 
 -->
 
-
-
-
- <!-- 5. Playing CSS Animations with Vue 's help - Theory
+<!-- 5. Playing CSS Animations with Vue 's help - Theory
 ======================================
 
 -Lets add a button that toggles a paragrah when it is clicked as follows
@@ -166,10 +160,7 @@ ELEMENT_NOT_MOUNTED => ELEMENT_MOUNTED => ELEMENT NOT MOUNTED
 
 -->
 
-
-
-
- <!-- 6. Using The <transition></transition> Component  
+<!-- 6. Using The <transition></transition> Component  
 ======================================
 
 -As explained Vue will add certain utility classes ; So let's add them to control how Vue adds the element to the DOM;
@@ -253,9 +244,6 @@ ELEMENT_NOT_MOUNTED => ELEMENT_MOUNTED => ELEMENT NOT MOUNTED
         }
 
 -->
-
-
-
 
 <!-- 6. CSS Animations with <transition></transition> Component  
 ======================================
@@ -351,9 +339,6 @@ In our case of the paragraph ; That would be
     .v-enter-to  =>  .to_class {}
 
 -->
-
-
-
 
 <!-- 8. Animating A Modal
 ======================================
@@ -468,7 +453,6 @@ Just as we can wrap around built in element;
 
 
 -->
-
 
 <!-- 9 . Transitioning Between Multiple Elements - MORE THAN ONE CHILD ELEMENTS
 ======================================
@@ -592,11 +576,16 @@ e.g.
 
 -->
 
-
-
 <template>
+  <router-view v-slot="slotProps">
+    <transition name="fade-button" mode="out-in">
+      <component :is="slotProps.Component"></component>
+    </transition>
+  </router-view>
 
-<div class="container">
+  <!--
+    
+     <div class="container">
   <users-list></users-list>
 </div>
 
@@ -634,70 +623,68 @@ e.g.
   <div class="container">
     <button @click="showDialog">Show Dialog</button>
   </div>
-
-</template>  
+  
+  
+   -->
+</template>
 
 <script>
-
-import UsersList from './components/UsersList.vue';
+// import UsersList from './components/UsersList.vue';
 
 export default {
-
-  components : {
-    UsersList ,
-  },
+  // components : {
+  //   UsersList ,
+  // },
 
   data() {
-    return { 
-      animatedBlock : false,
+    return {
+      animatedBlock: false,
       dialogIsVisible: false,
-      isParaVisible : false,
-      usersAreVisible : false,
-       };
+      isParaVisible: false,
+      usersAreVisible: false,
+    };
   },
 
-
   methods: {
-
-    beforeEnter(el){
-      console.log('beforeEnter() called ...');
+    beforeEnter(el) {
+      console.log("beforeEnter() called ...");
       console.log(el);
     },
-    enter(el){
-      console.log('Enter() called ...');
-      console.log(el);
-    },
-
-    afterEnter(el){
-      console.log('afterEnter() called ...');
+    enter(el) {
+      console.log("Enter() called ...");
       console.log(el);
     },
 
-    beforeLeave(el){
-      console.log('beforeLeave() called ...');
-      console.log(el);
-    },
-    leave(el){
-      console.log('leave() called ...');
-      console.log(el);
-    },
-    afterLeave(el){
-      console.log('afterLeave() called ...');
+    afterEnter(el) {
+      console.log("afterEnter() called ...");
       console.log(el);
     },
 
-    showUsers(){
-      this.usersAreVisible = true
+    beforeLeave(el) {
+      console.log("beforeLeave() called ...");
+      console.log(el);
     },
-    hideUsers(){
-      this.usersAreVisible = false
+    leave(el) {
+      console.log("leave() called ...");
+      console.log(el);
+    },
+    afterLeave(el) {
+      console.log("afterLeave() called ...");
+      console.log(el);
     },
 
-    animateBlock(){
+    showUsers() {
+      this.usersAreVisible = true;
+    },
+    hideUsers() {
+      this.usersAreVisible = false;
+    },
+
+    animateBlock() {
       this.animatedBlock = true;
     },
 
-    toggleParagraph(){
+    toggleParagraph() {
       this.isParaVisible = !this.isParaVisible;
     },
 
@@ -708,7 +695,6 @@ export default {
     hideDialog() {
       this.dialogIsVisible = false;
     },
-
   },
 };
 </script>
@@ -756,76 +742,84 @@ button:active {
 }
 
 .animate {
-    animation: slide-scale 0.5s ease-out forwards;
+  animation: slide-scale 0.5s ease-out forwards;
 }
 
 /* <transition></transition>  special utility classes added by Vue when the elemnt is appearing/rendered to the DOM*/
 
-    .para-enter-from {
-      opacity: 0;
-      transform: translateY(-30px);
-    }
+.para-enter-from {
+  opacity: 0;
+  transform: translateY(-30px);
+}
 
-    .para-enter-active {
-      transition : all 0.3s ease-out;
-    }
+.para-enter-active {
+  transition: all 0.3s ease-out;
+}
 
-    .para-enter-to {
-      opacity : 1;
-      transform: translateY(0);
-    }
+.para-enter-to {
+  opacity: 1;
+  transform: translateY(0);
+}
 
-   /* <transition></transition>  special utility classes added by Vue when the elemnt is removed/detached from the DOM*/
+/* <transition></transition>  special utility classes added by Vue when the elemnt is removed/detached from the DOM*/
 
-     .para-leave-from {
-       opacity: 1;
-       transform: translateY(0);
-        }
+.para-leave-from {
+  opacity: 1;
+  transform: translateY(0);
+}
 
-     .para-leave-active {
-        transition : all 3s ease-in;
-      
-    }
+.para-leave-active {
+  transition: all 3s ease-in;
+}
 
-      .para-leave-to {
-       opacity: 0;
-       transform: translateY(-30px);
-     }
+.para-leave-to {
+  opacity: 0;
+  transform: translateY(-30px);
+}
 
-     .fade-button-enter-from ,
-     .fade-button-leave-to {
-      opacity : 0;      
-     }
+.fade-button-enter-from,
+.fade-button-leave-to {
+  opacity: 0;
+}
 
-     .fade-button-enter-active {
-        transition : opacity 0.3s ease-out;
-     }
+.fade-button-enter-active {
+  transition: opacity 0.3s ease-out;
+}
 
-     .fade-button-leave-active {
-        transition : opacity 0.3s ease-in;
-     }
+.fade-button-leave-active {
+  transition: opacity 0.3s ease-in;
+}
 
-     .fade-button-enter-to ,
-     .fade-button-leave-from{
+.fade-button-enter-to,
+.fade-button-leave-from {
+  opacity: 1;
+}
 
-        opacity: 1;
-     }
+.route-enter-from {
+}
 
+.route-enter-active {
+  animation: slide-scale 0.4s ease-out;
+}
 
-    
+.route-enter-to {
+}
+
+.route-leave-active {
+  animation: slide-scale 0.4s ease-in;
+}
+
 /* Animate Black Box */
 
 @keyframes slide-scale {
-  0%{
-    transform : translateX(0) scale(1);
+  0% {
+    transform: translateX(0) scale(1);
   }
- 70% {
+  70% {
     transform: translateX(-100px) scale(1.1);
-    }
+  }
   100% {
     transform: translateX(-150px) scale(1);
   }
 }
-
-
 </style>
